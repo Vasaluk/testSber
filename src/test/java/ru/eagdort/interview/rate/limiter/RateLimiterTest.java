@@ -64,7 +64,7 @@ class RateLimiterTest {
             Thread.sleep(1000);
 
             int delta = LocalTime.now().getSecond() - startTime.getSecond();
-            System.out.println("--------------------------  [Прошло секунд: " + delta + "] -----------------------------");
+            System.out.println("--------------------------  [Seconds passed: " + delta + "] -----------------------------");
         }
 
         //Your assertions...
@@ -107,12 +107,12 @@ class RateLimiterTest {
                 }
 
                 long fromStart = Duration.between(startTime, LocalTime.now()).toMillis();
-                System.out.println(name + ": номер попытки вывода: " + attempt + " время после старта [мс]: " + fromStart);
+                System.out.println(name + ": Print attempt number: " + attempt + ". Time passed after start [ms]: " + fromStart);
             }
         }
 
         static PrintTask create(String name) {
-            return new PrintTask("Задание: " + name);
+            return new PrintTask("Task: " + name);
         }
     }
 }
