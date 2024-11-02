@@ -34,6 +34,10 @@ class RateLimiterTest {
 
     private final ExecutorService executorService  = Executors.newFixedThreadPool(nTasks);
 
+    private final LocalTime startTime = LocalTime.now();
+    private final LocalTime finishTime = startTime.plus(5, ChronoUnit.SECONDS);
+    private static int delta;
+
     @AfterEach
     void tearDown() {
         executorService.shutdownNow();
@@ -45,8 +49,8 @@ class RateLimiterTest {
     void shouldLimitNumberOfOutputEventsPerSecondToRateValueWhenWindowRateLimiterIsApplied() throws InterruptedException {
 
         //временные рамки для теста: 5 секунд
-        LocalTime startTime = LocalTime.now();
-        LocalTime finishTime = startTime.plus(5, ChronoUnit.SECONDS);
+//        LocalTime startTime = LocalTime.now();
+//        LocalTime finishTime = startTime.plus(5, ChronoUnit.SECONDS);
 
         System.out.println("start at " + startTime);
         System.out.println("finish at " + finishTime);
@@ -63,11 +67,12 @@ class RateLimiterTest {
         while (LocalTime.now().isBefore(finishTime)) {
             Thread.sleep(1000);
 
-            int delta = LocalTime.now().getSecond() - startTime.getSecond();
+            delta = LocalTime.now().getSecond() - startTime.getSecond();
             System.out.println("--------------------------  [Seconds passed: " + delta + "] -----------------------------");
         }
 
         //Your assertions...
+        // потестить консоль к сожалению уже не могу(устала), полагаю через System.out
 
     }
 
@@ -107,7 +112,9 @@ class RateLimiterTest {
                 }
 
                 long fromStart = Duration.between(startTime, LocalTime.now()).toMillis();
-                System.out.println(name + ": Print attempt number: " + attempt + ". Time passed after start [ms]: " + fromStart);
+                if (limiter.accept(delta)) {
+                    System.out.println(name + ": Print attempt number: " + attempt + ". Time passed after start [ms]: " + fromStart);
+                }
             }
         }
 

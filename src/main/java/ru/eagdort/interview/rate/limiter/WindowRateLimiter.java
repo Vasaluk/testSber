@@ -1,13 +1,14 @@
 package ru.eagdort.interview.rate.limiter;
 
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TODO Необходимо реализовать оконный лимитер, который:
  * <p>
  * 1. способен пропускать заданное (rate) количество TPS (операций в секунду)
  * <p>
- * 2. не пропускать операции при превышении rate, т.е. меджу двумя моментами времени,
+ * 2. способен не пропускать операции при превышении rate, т.е. меджу двумя моментами времени,
  * * отстоящими друг от друга на секунду, не должно быть больше операций, чем rate
  * <p>
  * 3. должен работать в многопоточном режиме
@@ -15,20 +16,25 @@ import java.util.concurrent.TimeUnit;
 public class WindowRateLimiter implements RateLimiter {
 
     private final int rate;
+    private final Map<Integer, Integer> mapCounts = new HashMap<>();
 
     public WindowRateLimiter(int rate) {
         this.rate = rate;
     }
 
     @Override
-    public boolean accept() {
-
+    public synchronized boolean accept(int second) {
         if (rate == 0) {
             return false; // Ничего не пропускаем
         }
 
-        //.. Уour code
-        return true;
+        if (mapCounts.containsKey(second)) {
+            mapCounts.put(second, mapCounts.get(second) + 1);
+        } else {
+            mapCounts.put(second, 0);
+        }
+
+        return mapCounts.get(second) < rate;
     }
 
 }
