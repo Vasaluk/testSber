@@ -8,5 +8,5 @@ public interface RateLimiter {
      *
      * @return boolean должен вернуть true, если лимитер "пропускает" операцию
      */
-    boolean accept(int second);
+    boolean accept(int currentSecond);
 }

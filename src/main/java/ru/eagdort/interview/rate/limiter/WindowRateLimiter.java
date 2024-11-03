@@ -23,18 +23,18 @@ public class WindowRateLimiter implements RateLimiter {
     }
 
     @Override
-    public synchronized boolean accept(int second) {
+    public synchronized boolean accept(int currentSecond) {
         if (rate == 0) {
             return false; // Ничего не пропускаем
         }
 
-        if (mapCounts.containsKey(second)) {
-            mapCounts.put(second, mapCounts.get(second) + 1);
+        if (mapCounts.containsKey(currentSecond)) {
+            mapCounts.put(currentSecond, mapCounts.get(currentSecond) + 1);
         } else {
-            mapCounts.put(second, 0);
+            mapCounts.put(currentSecond, 0);
         }
 
-        return mapCounts.get(second) < rate;
+        return mapCounts.get(currentSecond) < rate;
     }
 
 }
